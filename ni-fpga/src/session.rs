@@ -10,6 +10,13 @@ pub struct Session {
 }
 
 impl Session {
+    pub fn from_session(session: ffi::Session) -> Result<Self, Error> {
+        match NiFpga::from_session(session) {
+            Ok(api) => Ok(Self { api }),
+            Err(err) => Err(err),
+        }
+    }
+
     pub fn open(bitfile: &str, signature: &str, resource: &str) -> Result<Self, Error> {
         let c_bitfile = CString::new(bitfile).unwrap();
         let c_signature = CString::new(signature).unwrap();

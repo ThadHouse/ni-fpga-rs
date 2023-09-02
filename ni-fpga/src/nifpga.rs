@@ -183,6 +183,15 @@ impl NiFpga {
         }
     }
 
+    pub fn from_session(session: ffi::Session) -> Result<Self, Error> {
+        let api = match NiFpgaApi::load() {
+            Ok(api) => api,
+            Err(err) => return Err(Error::DlOpen(err)),
+        };
+
+        Ok(Self { session, api })
+    }
+
     pub fn close(self, attribute: u32) -> Result<(), Error> {
         self.api
             .NiFpgaDll_Close(self.session, attribute)
